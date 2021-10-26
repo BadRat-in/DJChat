@@ -1,0 +1,35 @@
+{% extends "base.html" %} 
+{% block title %}Chat Seguro - Contect{% endblock title %} 
+{% block content %}
+<center>
+    {% comment %} {% if error == 'error' %}
+    <div>
+        <h4 style="color: #ee3333;">Email is already registered with another account</h4>
+    </div>
+    {% endif %} {% endcomment %}
+    <div class="form">
+        <form method="POST" action="/get_support/">{% csrf_token %}
+            <table>
+                <th colspan="2">Contect</th>
+                <tr>
+                    <td><label for="name">Name</label></td>
+                    <td><input type="text" name="name" class="input_field" placeholder="Name" minlength="6" required></td>
+                </tr>
+                <tr>
+                    <td><label for="email">Email</label></td>
+                    <td><input type="email" name="email" class="input_field" placeholder="Email" required></td>
+                </tr>
+                <tr>
+                    <td><label for="number">Number</label></td>
+                    <td><input type="text" name="number" class="input_field" placeholder="Number" minlength="10" maxlength="10" required></td>
+                </tr>
+                <tr>
+                    <td><label for="text">Query</label></td>
+                    <td><textarea name="userquery" id="userQuery" cols="30" style="outline: none; border-radius: 5px;" rows="5" minlength="50" placeholder="Describe your problem(Min 50 Characters)."></textarea></td>
+                </tr>
+            </table>
+            <input type="submit" value="Sign Up">
+        </form>
+    </div>
+</center>
+{% endblock content %}

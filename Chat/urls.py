@@ -1,0 +1,22 @@
+from . import views
+from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path('', views.home, name='Chat Seguro'),
+    path('timeline/', views.timeline, name='Timeline'),
+    path('signup/', views.signup, name='Sign Up'),
+    path('contect/', views.contect, name='Contect'),
+    path('forgotpasswd/', views.forgotpasswd, name='ForgotPassword'),
+    path('register/', views.register, name='register'),
+    path('error/', views.error, name='error'),
+    path('login/', views.login, name='login'),
+    path('timeline/logout/', views.logout, name='logout'),
+    path('timeline/story/', views.story, name='Story'),
+    path('timeline/searchUser/', views.searchUser, name='searchUser'),
+    path('get_support/', views.get_support, name='Send Query'),
+]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

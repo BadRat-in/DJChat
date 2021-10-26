@@ -1,0 +1,53 @@
+{% extends "base.html" %} 
+{% block title %}Chat Seguro - Sign Up{% endblock title %} 
+{% block content %}
+<center>
+    {% if error == 'error' %}
+    <div>
+        <h4 style="color: #ee3333;">Email is already registered with another account</h4>
+    </div>
+    {% endif %}
+    <div class="form">
+        <form method="POST" action="/register/">{% csrf_token %}
+            <table>
+                <th colspan="2">Sign Up</th>
+                <tr>
+                    <td><label for="name">Name</label></td>
+                    <td><input type="text" name="name" class="input_field" placeholder="Name" minlength="6" required></td>
+                </tr>
+                <tr>
+                    <td><label for="email">Email</label></td>
+                    <td><input type="email" name="email" class="input_field" placeholder="Email" required></td>
+                </tr>
+                <tr>
+                    <td><label for="number">Number</label></td>
+                    <td><input type="text" name="number" class="input_field" placeholder="Number" minlength="10" maxlength="10" required></td>
+                </tr>
+                <tr>
+                    <td><label for="passwd">Password</label></td>
+                    <td><input type="text" name="passwd" class="input_field" placeholder="Password" id="passwdfield" minlength="6" required><span><i class="far fa-eye-slash passwd-icon" onclick="showpass('passwdfield', this.id)" id="eye-icon"></i></span></td>
+                </tr>
+            </table>
+            <input type="submit" value="Sign Up">
+        </form>
+    </div>
+</center>
+{% endblock content %} {% block script %}
+<script type="text/javascript">
+    function showpass(id0, id1) {
+        const passwd = document.querySelector("#" + id0);
+        const passwd_icon = document.querySelector("#" + id1);
+        if (passwd.getAttribute("type") === "text") {
+            passwd.setAttribute("type", "password");
+            passwd_icon.className = "far fa-eye passwd-icon";
+            passwd_icon.style = "left: -26px; font-size: 18px;";
+
+        } else {
+            passwd.setAttribute("type", "text");
+            passwd_icon.className = "far fa-eye-slash passwd-icon";
+            passwd_icon.style = "left: -27px;"
+
+        }
+    }
+</script>
+{% endblock script %}

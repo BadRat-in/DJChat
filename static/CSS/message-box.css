@@ -1,0 +1,65 @@
+
+
+.chats{
+    float: right;
+    width: 64%;
+}
+
+aside{
+    width: 34%;
+    height: 100vh;
+    border-right: 2px solid rgba(67, 87, 99, 0.664);
+}
+
+span{
+    cursor: pointer;
+}
+
+.card{
+    margin: 5px;
+    border-radius: 8px;
+    display: flex;
+    height: 60px;
+    background-color: rgba(66, 77, 82, 0.322);
+}
+
+.card .user-detail{
+    margin-left: 10px;
+}
+
+.card .user-detail h2{
+    margin: 0;
+    margin-top: 5px;
+}
+
+.card .user-detail h4{
+    margin: 0;
+}
+
+.card img{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 10px;
+    border-radius: 50%;
+}
+
+.container{
+    border-radius: 6px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.664);
+    margin: 30px;
+}
+
+.search{
+    height: 30px;
+}
+
+.search input{
+    height: 30px;
+    padding: 5px;
+    width: 96%;
+    margin-right: 5px;
+    margin-left: 5px;
+    border: none;
+    border-radius: 15px;
+}

@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+        integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+    <title>An Error</title>
+    <style>
+        body {
+            background: white;
+        }
+
+        .img-error {
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+        }
+
+        .container {
+            margin-top: 8%;
+        }
+
+        .container p {
+            color: #808080;
+            font-size: 25px;
+            font-weight: 500;
+        }
+
+        .container a{
+            color: #121212;
+            text-decoration: none;
+        }
+
+        .error-actions{
+            padding: 8px;
+            background-color: lightblue;
+            width: 150px;
+            height: 18px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <center>
+            <img class="img-error" src='{% static "Image/not found.gif" %}'>
+
+            <p>Sorry, an error has occured</p>
+            <a href="/">
+                <div class="error-actions">
+                    <span><i class="fas fa-arrow-left"></i>&ensp; Back Home</span>
+                </div>
+            </a>
+        </center>
+    </div>
+</body>
+
+</html>
