@@ -1,25 +1,30 @@
 from django.contrib.messages.api import get_messages
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
-from .models import Users
+from .models import Users, Message
 import hashlib
 import json
 
 # Create your views here.
 def home(request) :
-    try:
-        if request.session['error'] == 'error':
-            del request.session['error']
-            return render(request, "./home.html", {'error': 'error'})
-    except:
-        pass
-    try:
-        if request.session['error2'] == 'error2':
-            del request.session['error2']
-            return render(request, './home.html', {'error2': 'error2'})
-    except:
-        pass
-    return render(request, './home.html')
+    isMobile = request.user_agent.is_mobile
+    isTab = request.user_agent.is_tablet
+    if (isTab or isMobile):
+        return render(request, "./formobileortab.html")
+    else:
+        try:
+            if request.session['error'] == 'error':
+                del request.session['error']
+                return render(request, "./home.html", {'error': 'error'})
+        except:
+            pass
+        try:
+            if request.session['error2'] == 'error2':
+                del request.session['error2']
+                return render(request, './home.html', {'error2': 'error2'})
+        except:
+            pass
+        return render(request, './home.html')
 
 def timeline(request):
     try:
@@ -67,7 +72,7 @@ def register(request):
     try:
         user = Users.objects.get(mail=email)
     except:
-        adduser = Users.objects.create(name=name, mail=email, number=number, passwd=passwd, hashid=hashid)
+        adduser = Users.objects.create(name=name, mail=email, number=number, passwd=passwd, hashid=hashid, status=0)
         check = adduser.save()
         if check == None:
             return redirect("Chat Seguro")   
@@ -90,6 +95,8 @@ def login(request):
         return redirect('/')
     if user.passwd == passwd:
         request.session['id'] = user.hashid
+        updateStatus = Users.objects.update(status=1)
+        # updateStatus.save()
         return redirect("/timeline/") 
     else:
         request.session['error'] = 'error'
@@ -103,7 +110,7 @@ def contect(request):
 def forgotpasswd(request):
     return render(request, "./forgotpasswd.html")
 
-def error(request):
+def error(request, *args, **kwargs):
     return render(request, "error.html")
 
 def logout(request):

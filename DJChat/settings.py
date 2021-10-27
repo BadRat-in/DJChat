@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-q^kk2!q4&6gs#tdo9r(0x#ceo+q0^wuf318_e_8#_cd#&af0!^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["127.0.0.1", "djchatseguro.herokuapp.com"]
 
 # CORS_ORIGIN_ALLOW_ALL = False
 
@@ -46,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Chat.apps.ChatConfig',
+    'django_user_agents',
 ]
 
 MIDDLEWARE = [
@@ -56,9 +56,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware',
 ]
 
-ROOT_URLCONF = 'DJChat.urls'
+ROOT_URLCONF = 'Chat.urls'
 
 TEMPLATES = [
     {
@@ -88,7 +89,7 @@ WSGI_APPLICATION = 'DJChat.wsgi.application'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'chat_users',
+#         'NAME': 'Chat Seguro',
 #         'HOST': '127.0.0.1',
 #         'PORT': '3306',
 #         'USER': 'root',
@@ -143,12 +144,20 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-django_heroku.settings(locals()) 
+# # Cache backend is optional, but recommended to speed up user agent parsing
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#         'LOCATION': '127.0.0.1:11211',
+#     }
+# }
+
+# # Name of cache backend to cache user agents. If it not specified default
+# # cache alias will be used. Set to `None` to disable caching.
+# USER_AGENTS_CACHE = 'default'

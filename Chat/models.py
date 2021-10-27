@@ -6,20 +6,25 @@ class Users(models.Model):
     number = models.CharField(max_length=10)
     mail = models.EmailField()
     passwd = models.CharField(max_length=150)
-    photo = models.ImageField()
-    hashid = models.CharField(max_length=150, default='')
+    photo = models.ImageField(upload_to='static\media')
+    hashid = models.CharField(max_length=150)
+    status = models.IntegerField(default=0)
     
     def __str__(self):
         return self.mail
     
-    
-class Contects(models.Model):
-    you = models.CharField(max_length=150)
-    contect = models.CharField(max_length=150)
-    
+
+
     
 class Message(models.Model):
     sender = models.CharField(max_length=150)
     reciever = models.CharField(max_length=150)
     message = models.CharField(max_length=10000)
+    isSeen = models.IntegerField(default=0)
+    isDeliver = models.IntegerField(default=0)
+    time = models.TimeField()
+    
+    def __str__(self):
+        return self.sender + "=>" + self.reciever
+    
     

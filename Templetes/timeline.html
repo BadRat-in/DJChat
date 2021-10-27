@@ -20,6 +20,7 @@
             <ul>
                 <li><a href="/timeline/">{{name}}</a></li>
                 <li><a href="/timeline/story/">Story</a></li>
+                <li><a href="/timeline/logout/">Settings</a></li>
                 <li><a href="/timeline/logout/">Logout</a></li>
             </ul>
         </div>
@@ -45,7 +46,7 @@
             <div class="right">
                 <div class="right-top">
                     <div class="user-details">
-                        <img class="active-avtar-img" src='{{media}}/media/avtar.png' alt="User Avtar">
+                        <img class="active-avtar-img" src="{% static 'media/avtar.png' %}" alt="User Avtar">
                         <div style="margin-top: 10px;">
                             <h2 class="active-user">Username</h2>
                             <p class="user-status">Status</p>
@@ -86,6 +87,11 @@
         </div>
     </body>
     <script type="text/javascript">
+        function SendtoChat(str) {
+
+        }
+
+
         function searchUser(str) {
             if (str.length == 0) {
                 return;
@@ -140,7 +146,7 @@
                                 if (value[1].length === 24) {
                                     value[1] += "...";
                                 }
-                                html_data += "<li><div class='user-tile'><div class='user-details-tile'><img class='avtar-img' src=" + value[2] + " alt='User Avtar'><div><input type='hidden' name='userid' value=" + value[3] + "/><h3>" + value[0] + "</h3><p>" + value[1] + "</p></div></div><div class='time'><p>Time</p></div></div></li>";
+                                html_data += "<li><div class='user-tile'><div class='user-details-tile'><img class='avtar-img' src='../static" + value[2].slice(1, -1) + "'' alt='User Avtar'><div><input type='hidden' name='userid' value=" + value[3] + "/><h3>" + value[0] + "</h3><p>" + value[1] + "</p></div></div></div></li>";
                             });
                             document.getElementById("userlist").innerHTML = html_data;
                         }
