@@ -1,1 +1,1 @@
-web: gunicorn DJChat.wsgi
+web: gunicorn DJChat.wsgi --log-file
