@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-import os
+import os, django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-q^kk2!q4&6gs#tdo9r(0x#ceo+q0^wuf318_e_8#_cd#&af0!^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1", "djchatseguro.herokuapp.com"]
+ALLOWED_HOSTS = ["127.0.0.1", "djchatseguro.herokuapp.com", "0699-157-34-166-38.ngrok.io"]
 
 # CORS_ORIGIN_ALLOW_ALL = False
 
@@ -86,22 +86,22 @@ WSGI_APPLICATION = 'DJChat.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'Chat Seguro',
-#         'HOST': '127.0.0.1',
-#         'PORT': '3306',
-#         'USER': 'root',
-#         'PASSWORD': '7180'
-#     }
-# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'Chat Seguro',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+        'USER': 'root',
+        'PASSWORD': '7180'
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
@@ -145,6 +145,9 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = '/media/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -161,3 +164,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # # Name of cache backend to cache user agents. If it not specified default
 # # cache alias will be used. Set to `None` to disable caching.
 # USER_AGENTS_CACHE = 'default'
+
+django_heroku.settings(locals()) 
