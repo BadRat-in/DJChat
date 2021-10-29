@@ -2,7 +2,7 @@ from . import views
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from django.conf.urls import handler404
+from django.conf.urls import handler404, url
 from django.views.static import serve
 
 urlpatterns = [
@@ -17,6 +17,10 @@ urlpatterns = [
     path('timeline/story/', views.story, name='Story'),
     path('timeline/searchUser/', views.searchUser, name='searchUser'),
     path('get_support/', views.get_support, name='Send Query'),
+    url(r'^media/(?P<path>.*)$', serve, {'document_root': 
+        settings.MEDIA_ROOT}),
+    url(r'^static/(?P<path>.*)$', serve, {'document_root': 
+        settings.STATIC_ROOT}),
 ]
 
 
