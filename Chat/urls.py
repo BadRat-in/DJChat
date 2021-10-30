@@ -17,7 +17,6 @@ urlpatterns = [
     path('timeline/story/', views.story, name='Story'),
     path('timeline/searchUser/', views.searchUser, name='searchUser'),
     path('get_support/', views.get_support, name='Send Query'),
-    path('admin/', admin.site.urls, name='admin'),
 ]
 
 
