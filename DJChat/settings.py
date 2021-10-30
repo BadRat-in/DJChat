@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-import os, django_heroku, dj_database_url
+import os, dj_database_url, django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,16 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-q^kk2!q4&6gs#tdo9r(0x#ceo+q0^wuf318_e_8#_cd#&af0!^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "djchatseguro.herokuapp.com", "0699-157-34-166-38.ngrok.io"]
-
-# CORS_ORIGIN_ALLOW_ALL = False
-
-# CORS_ORIGIN_WHITELIST = (
-#        'localhost:3000',
-# )
-
+ALLOWED_HOSTS=['127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -88,6 +81,10 @@ WSGI_APPLICATION = 'DJChat.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+
+
+#<------------MySQL----------------->#
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
@@ -98,23 +95,31 @@ WSGI_APPLICATION = 'DJChat.wsgi.application'
 #         'PASSWORD': '7180'
 #     }
 # }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+
+
+#<------------SQLite----------------->#
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dfgs4mn7qgb9bp',
-        'USER': 'qetyzlfaxamysh',
-        'PASSWORD': 'qetyzlfaxamysh',
-        'HOST': 'ec2-18-211-236-255.compute-1.amazonaws.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+
+#<------------PostgreSQL----------------->#
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'dfgs4mn7qgb9bp',
+#         'USER': 'qetyzlfaxamysh',
+#         'PASSWORD': 'qetyzlfaxamysh',
+#         'HOST': 'ec2-18-211-236-255.compute-1.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
 
 WHITENOISE_USE_FINDERS = True
 
@@ -161,6 +166,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
@@ -185,4 +191,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # # cache alias will be used. Set to `None` to disable caching.
 # USER_AGENTS_CACHE = 'default'
 
-django_heroku.settings(locals()) 
+# django_heroku.settings(locals()) 
