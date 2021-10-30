@@ -13,52 +13,66 @@ def home(request) :
         return render(request, "./formobileortab.html")
     else:
         try:
-            if request.session['error'] == 'error':
-                del request.session['error']
-                return render(request, "./home.html", {'error': 'error'})
+            id = request.session['id']
+            return redirect('/timeline/')
         except:
-            pass
-        try:
-            if request.session['error2'] == 'error2':
-                del request.session['error2']
-                return render(request, './home.html', {'error2': 'error2'})
-        except:
-            pass
-        return render(request, './home.html')
+            try:
+                if request.session['error'] == 'error':
+                    del request.session['error']
+                    return render(request, "./home.html", {'error': 'error'})
+            except:
+                pass
+            try:
+                if request.session['error2'] == 'error2':
+                    del request.session['error2']
+                    return render(request, './home.html', {'error2': 'error2'})
+            except:
+                pass
+            return render(request, './home.html')
 
 def timeline(request):
-    try:
-        id = request.session['id']
-    except:
-        redirect('/')
-    try:
-        user = Users.objects.get(hashid=id)
-        if user.photo != "":
-            params = {
-                'name': user.name,
-                'mail': user.mail,
-                'photo': f'/media/{user.photo}'
-            }
-            return render(request, "./timeline.html", params)
-        else:
-            params = {
-                'name': user.name,
-                'mail': user.mail,
-                'photo': '/media/avtar.png'
-            }
-            return render(request, "./timeline.html", params)
-    except Exception as e:
-        print(e)
-        request.session['error2'] = 'error2'
-        return redirect('/')
+    isMobile = request.user_agent.is_mobile
+    isTab = request.user_agent.is_tablet
+    if (isTab or isMobile):
+        return render(request, "./formobileortab.html")
+    else:
+        try:
+            id = request.session['id']
+        except:
+            redirect('/')
+        try:
+            user = Users.objects.get(hashid=id)
+            if user.photo != "":
+                params = {
+                    'name': user.name,
+                    'mail': user.mail,
+                    'photo': f'/media/{user.photo}'
+                }
+                return render(request, "./timeline.html", params)
+            else:
+                params = {
+                    'name': user.name,
+                    'mail': user.mail,
+                    'photo': '/media/avtar.png'
+                }
+                return render(request, "./timeline.html", params)
+        except Exception as e:
+            print(e)
+            request.session['error2'] = 'error2'
+            return redirect('/')
 
 def signup(request):
-    try:
-        if request.session['error'] == 'error':
-            del request.session['error']
-            return render(request, "./signup.html", {'error': 'error'})
-    except:
-        return render(request, './signup.html')
+    isMobile = request.user_agent.is_mobile
+    isTab = request.user_agent.is_tablet
+    if (isTab or isMobile):
+        return render(request, "./formobileortab.html")
+    else:
+        try:
+            if request.session['error'] == 'error':
+                del request.session['error']
+                return render(request, "./signup.html", {'error': 'error'})
+        except:
+            return render(request, './signup.html')
 
 def register(request):
     name = request.POST.get("name")
@@ -95,7 +109,7 @@ def login(request):
         return redirect('/')
     if user.passwd == passwd:
         request.session['id'] = user.hashid
-        updateStatus = Users.objects.update(status=1)
+        Users.objects.update(status=1)
         # updateStatus.save()
         return redirect("/timeline/") 
     else:
@@ -105,15 +119,29 @@ def login(request):
         
 
 def contect(request):
-    return render(request, "./contect.html")
+    isMobile = request.user_agent.is_mobile
+    isTab = request.user_agent.is_tablet
+    if (isTab or isMobile):
+        return render(request, "./formobileortab.html")
+    else:
+        return render(request, "./contect.html")
 
 def forgotpasswd(request):
-    return render(request, "./forgotpasswd.html")
+    isMobile = request.user_agent.is_mobile
+    isTab = request.user_agent.is_tablet
+    if (isTab or isMobile):
+        return render(request, "./formobileortab.html")
+    else:
+        return render(request, "./forgotpasswd.html")
 
 def error(request, *args, **kwargs):
     return render(request, "error.html")
 
-def logout(request):
+def logout(request):      
+    id = request.session['id']
+    user = Users.objects.get(hashid=id)
+    user.status = 0
+    user.save()
     del request.session['id']
     return redirect('/')
 
