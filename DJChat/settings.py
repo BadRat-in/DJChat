@@ -99,27 +99,27 @@ WSGI_APPLICATION = 'DJChat.wsgi.application'
 
 #<------------SQLite----------------->#
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 
 #<------------PostgreSQL----------------->#
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'dfgs4mn7qgb9bp',
-#         'USER': 'qetyzlfaxamysh',
-#         'PASSWORD': 'qetyzlfaxamysh',
-#         'HOST': 'ec2-18-211-236-255.compute-1.amazonaws.com',
-#         'PORT': '5432',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dfgs4mn7qgb9bp',
+        'USER': 'qetyzlfaxamysh',
+        'PASSWORD': 'qetyzlfaxamysh',
+        'HOST': 'ec2-18-211-236-255.compute-1.amazonaws.com',
+        'PORT': '5432',
+    }
+}
 
 WHITENOISE_USE_FINDERS = True
 
