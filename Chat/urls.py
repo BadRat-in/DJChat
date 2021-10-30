@@ -4,12 +4,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import handler404
 from django.views.static import serve
+from django.contrib import admin
 
 urlpatterns = [
     path('', views.home, name='Chat Seguro'),
     path('timeline/', views.timeline, name='Timeline'),
     path('signup/', views.signup, name='Sign Up'),
-    path('contect/', views.contect, name='Contect'),
+    path('contect/', views.contect, name='Contect'),    
+    path('admin/', admin.site.urls),
     path('forgotpasswd/', views.forgotpasswd, name='ForgotPassword'),
     path('register/', views.register, name='register'),
     path('login/', views.login, name='login'),
