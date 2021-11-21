@@ -99,11 +99,11 @@ body {
 }
 
 hr {
-    background-color: navy;
-    color: navy;
+    color: white;
 }
 
 ::-webkit-scrollbar {
+    display: none;
     background: transparent;
     width: 9px;
 }
@@ -112,6 +112,10 @@ hr {
     background: rgb(133, 133, 133);
     border-radius: 15px;
     transition: background 400ms ease-in-out;
+}
+
+::-webkit-scrollbar-button {
+    display: none;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -182,7 +186,7 @@ hr {
 }
 
 .in {
-    width: 220px;
+    width: 250px;
     border-radius: 5px;
     outline: none;
     border: none;
@@ -290,6 +294,7 @@ li {
     border-radius: 50px;
     background-color: rgb(56, 56, 56);
     transition: background-color 250ms ease-in-out;
+    cursor: pointer;
 }
 
 .info-icon-div:hover {
@@ -309,6 +314,7 @@ li {
     width: 100%;
     border-bottom: solid 1px var(--c);
     overflow-y: auto;
+    overflow-x: hidden;
     margin: 2px 2px 2px 0;
 }
 
@@ -320,7 +326,7 @@ li {
     height: calc(600px - 420px - 100px);
 }
 
-form {
+.form {
     display: flex;
     width: 90%;
     align-items: center;
@@ -330,11 +336,56 @@ form {
     border: solid 1px lightgray;
 }
 
-.icon-plus {
+.attenment {
+    z-index: 999;
+    display: flex;
+    overflow: hidden;
+    margin-left: 6px;
+    height: 45px;
+    width: 30px;
+}
+
+.attenment i {
     color: white;
     font-size: 22px;
     padding: 8px;
-    margin-left: 6px;
+    cursor: pointer;
+}
+
+@keyframes rotate45 {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(45deg);
+    }
+}
+
+@keyframes rotate0 {
+    0% {
+        transform: rotate(45deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes expandWidth {
+    0% {
+        width: 30px;
+    }
+    100% {
+        width: 190px;
+    }
+}
+
+@keyframes srinkdWidth {
+    0% {
+        width: 190px;
+    }
+    100% {
+        width: 30px;
+    }
 }
 
 .icon-send {
@@ -342,6 +393,7 @@ form {
     font-size: 22px;
     padding: 8px;
     margin-right: 5px;
+    cursor: pointer;
 }
 
 .message-input {
@@ -357,6 +409,7 @@ form {
 }
 
 .my-msg {
+    overflow: hidden;
     max-width: 80%;
     display: flex;
     clear: both;
@@ -364,6 +417,7 @@ form {
 }
 
 .your-msg {
+    overflow: hidden;
     max-width: 80%;
     display: flex;
     clear: both;
@@ -413,4 +467,27 @@ form {
     margin-top: 5px;
     color: #bebcbc;
     font-size: 9px;
+}
+
+.bottom-btn {
+    display: none;
+    border-radius: 50%;
+    background-color: rgb(88, 88, 88);
+    position: absolute;
+    right: 3%;
+    bottom: 15%;
+    width: 25px;
+    height: 25px;
+    line-height: 22px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 999;
+}
+
+.bottom-btn i {
+    color: #dadada;
+    text-transform: capitalize;
+    font-size: 20px;
+    margin-top: 2px;
 }
