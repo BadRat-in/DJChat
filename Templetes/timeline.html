@@ -8,162 +8,105 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static './CSS/timeline.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static './CSS/show-d.css' %}" type="text/css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>{{name}}</title>
     <link rel="shortcut icon" href="{{media}}{{photo}}" type="image/x-icon">
+</head>
 
-    <body>
-        <div class="nav-bar">
-            <img src="{% static 'Image/logo1.png' %}" alt="Logo">
-            <h3>Chat Seguro</h3>
-            <ul>
-                <li><a href="/timeline/">{{name}}</a></li>
-                <li><a href="/timeline/story/">Story</a></li>
-                <li><a href="/timeline/logout/">Settings</a></li>
-                <li><a href="/timeline/logout/">Logout</a></li>
-            </ul>
-        </div>
-        <hr>
-        <div class="top"></div>
-        <div class="box">
-            <div class="left">
-                <div class="left-top">
-                    <h2>Chat Seguro</h2>
-                </div>
-                <div class="search-field-div">
-                    <input type="text" class="in" placeholder="Search" onkeyup="searchUser(this.value)">
-                    <i class="fas fa-search icon"></i>
-                    <!-- <i class="fas fa-plus icon" style="margin-left: 5px" onclick="newUser()"></i> -->
-                </div>
-                <!-- <hr> -->
-                <div class="user-list-view">
-                    <ul id="userlist">
-
-                    </ul>
+<body onload="setUserId(), getUser()">
+    <input type="hidden" name="sender_id" value="{{id}}" id="sender-id">
+    <div class="nav-bar">
+        <img src="{% static 'Image/logo1.png' %}" alt="Logo">
+        <h3>Chat Seguro</h3>
+        <ul>
+            <li><a href="/timeline/" id="name">{{name}}</a></li>
+            <li><a href="/timeline/story/">Story</a></li>
+            <li><a href="/timeline/logout/">Settings</a></li>
+            <li><a href="/timeline/logout/">Logout</a></li>
+        </ul>
+    </div>
+    <hr>
+    <div class="container" id="container">
+        <div class="show-details" id="show-d">
+            <div class="show">
+                <img src="{% static 'Image/logo1.png' %}" alt="User Image" id="s-detail-u-i">
+                <div>
+                    <h3 class="user-name" id="s-detail-u-n">name</h3>
+                    <h5 class="more-info" id="s-detail-u-m">mail</h5>
+                    <h5 class="more-info" id="s-detail-u-num">number</h5>
                 </div>
             </div>
-            <div class="right">
-                <div class="right-top">
-                    <div class="user-details">
-                        <img class="active-avtar-img" src="/media/avtar.png" alt="User Avtar">
-                        <div style="margin-top: 10px;">
-                            <h2 class="active-user">Username</h2>
-                            <p class="user-status">Status</p>
-                        </div>
-                    </div>
-                    <div class="info-icon-div">
-                        <i class="fas fa-info info-icon"></i>
-                    </div>
-                </div>
-                <div class="right-mid">
-                    <div class="my-msg">
-                        <div class="my">
-                            <p>Hello</p>
-                            <div class="msg-time">
-                                <p>Now</p>
-                            </div>
-                        </div>
-                        <img src='{% static "Image/user.jpg" %}' alt="User Avtar">
-                    </div>
-                    <div class="your-msg">
-                        <img src='{% static "Image/city.jpg" %}' alt="User Avtar">
-                        <div class="your">
-                            <p>Tall me</p>
-                            <div class="msg-time">
-                                <p>Now</p>
-                            </div>
-                        </div>
+            <i class="fas fa-times" onclick="closeDWin()"></i>
+        </div>
+    </div>
+    <div class="top"></div>
+    <div class="box">
+        <div class="left">
+            <div class="left-top">
+                <h2>Chat Seguro</h2>
+            </div>
+            <div class="search-field-div">
+                <input type="text" class="in" placeholder="Search" onkeyup="searchUser(this.value)">
+                <i class="fas fa-search icon"></i>
+            </div>
+            <div class="user-list-view">
+                <ul id="userlist">
+
+                </ul>
+            </div>
+        </div>
+        <div class="right">
+            <div class="right-top">
+                <div class="user-details">
+                    <input type="hidden" name="usernumber" value="" id="s-u-num">
+                    <img class="active-avtar-img" src="../static/media/avtar.png" alt="User Avtar" id="s-u-i">
+                    <div style="margin-top: 10px;">
+                        <h2 class="active-user" id="s-u-n">Username</h2>
+                        <p class="user-status" id="s-u-s">Status</p>
                     </div>
                 </div>
-                <div class="right-btm">
-                    <form action="">
-                        <div><i class="fas fa-plus icon-plus"></i></div>
-                        <input type="text" class="message-input" placeholder="Type a message...">
-                        <div><i class="fas fa-paper-plane icon-send"></i></div>
-                    </form>
+                <div class="info-icon-div" onclick="showDetails()">
+                    <i class="fas fa-info info-icon"></i>
+                </div>
+            </div>
+            <div class="right-mid" id="msg-box">
+                <!-- <div class="my-msg">
+                    <div class="my">
+                        <p>Hello</p>
+                        <div class="msg-time">
+                            <p>Now</p>
+                        </div>
+                    </div>
+                    <img src='{% static "Image/user.jpg" %}' alt="User Avtar">
+                </div>
+                <div class="your-msg">
+                    <img src='{% static "Image/city.jpg" %}' alt="User Avtar">
+                    <div class="your">
+                        <p>Tall me</p>
+                        <div class="msg-time">
+                            <p>Now</p>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="bottom-btn" onclick="slideToBottol()" id="bottom-btn"><i class="fas fa-angle-down"></i></div>
+            </div>
+            <div class="right-btm">
+                <div class="form">
+                    <div onclick="openClip()" class="attenment" id="attenment">
+                        <i class="fas fa-plus icon-plus" id="plus-icon"></i>
+                        <i class="fas fa-image"></i>
+                        <i class="fas fa-file"></i>
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <input type="text" class="message-input" placeholder="Type a message..." id="msg-input" value="">
+                    <div><i class="fas fa-paper-plane icon-send" onclick="sendmsg()" id="send-msg"></i></div>
                 </div>
             </div>
         </div>
-    </body>
-    <script type="text/javascript">
-        function SendtoChat(str) {
-
-        }
-
-
-        function searchUser(str) {
-            if (str.length == 0) {
-                return;
-            } else {
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        var data = this.responseText;
-                        data = data.split("[");
-                        if ((typeof data) === "No data available") {
-                            $("#userlist").append(data);
-                            console.log(data);
-                        } else {
-                            var temp_array = []
-                            data.forEach((value, index, array) => {
-                                var temp = value.split(", ");
-                                temp_array.push(temp)
-                            });
-                            temp_array.splice(0, 1)
-                            var html_data = ""
-                            temp_array.forEach((value, index, array) => {
-                                var nametemp = value[0].split("");
-                                var mailtemp = value[1].split("");
-                                let counter;
-                                if (value[0].length < 20) {
-                                    counter = value[0].length - 1;
-                                } else {
-                                    counter = 20;
-                                }
-                                for (var i = 0; i < counter; i++) {
-                                    if (i === 1) {
-                                        value[0] = nametemp[i]
-                                    } else {
-                                        value[0] += nametemp[i]
-                                    }
-                                }
-                                if (value[1].length < 25) {
-                                    counter = value[1].length - 1;
-                                } else {
-                                    counter = 25;
-                                }
-                                for (var i = 0; i < counter; i++) {
-                                    if (i === 1) {
-                                        value[1] = mailtemp[i]
-                                    } else {
-                                        value[1] += mailtemp[i]
-                                    }
-                                }
-                                if (value[0].length === 19) {
-                                    value[0] += "...";
-                                }
-                                if (value[1].length === 24) {
-                                    value[1] += "...";
-                                }
-                                html_data += "<li><div class='user-tile'><div class='user-details-tile'><img class='avtar-img' src=" + value[2] + " alt='User Avtar'><div><input type='hidden' name='userid' value=" + value[3] + "/><h3>" + value[0] + "</h3><p>" + value[1] + "</p></div></div></div></li>";
-                            });
-                            document.getElementById("userlist").innerHTML = html_data;
-                        }
-                    }
-                };
-                xmlhttp.open("GET", "/timeline/searchUser/?q=" + str + "&user={{mail}}", true);
-                xmlhttp.send();
-            }
-        }
-    </script>
+    </div>
+</body>
+<script type="text/javascript" src="{% static './js/timeline.js' %}"></script>
 
 </html>
-<!-- <span>
-    <i class="far fa-paper-plane"></i>
-    <i class="fas fa-paperclip"></i>
-    <i class="fas fa-arrow-left"></i>
-    <i class="far fa-clock"></i>
-    <i class="fas fa-check"></i>
-    <i class="fas fa-check-double"></i>
-</span> -->

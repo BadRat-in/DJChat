@@ -9,9 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'CSS/passwdicon.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'CSS/forgotpassword.css' %}" type="text/css">
     <link rel="shortcut icon" href="{% static 'Image/logo1.png' %}" type="image/x-icon" />
     <title>{% block title %}{% endblock title %}</title>
-    {% block CSS %}{% endblock CSS %}
+    {% block script %}{% endblock script %}
 </head>
 
 <body>
@@ -24,8 +25,7 @@
             <li><a href="/contect">Contect</a></li>
         </ul>
     </div>
-    <hr>
-    {% block content %}{% endblock content %}
+    <hr> {% block content %}{% endblock content %}
     <div class="container">
         <footer>
             <h3>Remote Coders Team</h3>
@@ -45,5 +45,5 @@
         </footer>
     </div>
 </body>
-{% block script %}{% endblock script %}
+
 </html>

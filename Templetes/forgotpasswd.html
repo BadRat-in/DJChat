@@ -1,2 +1,31 @@
-{% extends 'base.html' %}
-{% block title %}Forgot Password{% endblock title %}
+{% extends 'base.html' %} {% block title %}Forgot Password{% endblock title %} {% block content %}
+<center>
+    <div class="load" id="loader">
+        <div><img src="../static/Image/loading1.gif" alt="Loading GIF"></div>
+    </div>
+    <h4 id="error-div" class="res-text"></h4>
+    <div class="form">
+        <table>
+            <th colspan="2">Forgot Password</th>
+            <tr>
+                <td><label for="email">Email</label></td>
+                <td><input type="email" name="email" class="input_field" placeholder="Email" required onkeyup='check()' value="" id="mail"></td>
+            </tr>
+            <tr>
+                <td><label for="num">Number</label></td>
+                <td><input type="number" name="num" class="input_field" placeholder="Number" id="number" required value="" onkeyup="check()"></td>
+            </tr>
+            <tr>
+                <td><label for="otp">OTP</label></td>
+                <td><input class="otp-input" type="number" name="otp" placeholder="OTP" id="otp" minlength=7 maxlength=7 required readonly></td>
+            </tr>
+        </table>
+        <input type="submit" value="Get OTP" class="sub-btn" onclick="matchnum(this.id)" id="sub-btn">
+
+    </div>
+</center>
+{% endblock content %} {% block script %}
+<script type="text/javascript" src="../static/js/forgotpass.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
+{% endblock script %}
