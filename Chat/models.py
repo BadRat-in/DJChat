@@ -1,4 +1,7 @@
 from django.db import models
+from datetime import datetime
+
+Time = datetime.now()
 
 # Create your models here.
 class Users(models.Model):
@@ -23,6 +26,7 @@ class Message(models.Model):
     isSeen = models.IntegerField(default=0)
     isDeliver = models.IntegerField(default=0)
     time = models.TimeField()
+    date = models.DateField(default=Time.strftime("%Y-%m-%d"))
     
     def __str__(self):
         return self.sender + "=>" + self.reciever

@@ -3,7 +3,8 @@ from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from .models import Users, Message
 import hashlib
-import json
+import json, requests as https, random
+from datetime import datetime
 
 # Create your views here.
 def home(request) :
@@ -13,18 +14,22 @@ def home(request) :
         return render(request, "./formobileortab.html")
     else:
         try:
-            if request.session['error'] == 'error':
-                del request.session['error']
-                return render(request, "./home.html", {'error': 'error'})
+            id = request.session['id']
+            return redirect('/timeline/')
         except:
-            pass
-        try:
-            if request.session['error2'] == 'error2':
-                del request.session['error2']
-                return render(request, './home.html', {'error2': 'error2'})
-        except:
-            pass
-        return render(request, './home.html')
+            try:
+                if request.session['error'] == 'error':
+                    del request.session['error']
+                    return render(request, "./home.html", {'error': 'error'})
+            except:
+                pass
+            try:
+                if request.session['error2'] == 'error2':
+                    del request.session['error2']
+                    return render(request, './home.html', {'error2': 'error2'})
+            except:
+                pass
+            return render(request, './home.html')
 
 def timeline(request):
     try:
@@ -37,14 +42,16 @@ def timeline(request):
             params = {
                 'name': user.name,
                 'mail': user.mail,
-                'photo': f'/media/{user.photo}'
+                'photo': f'/media/{user.photo}',
+                'id': user.hashid,
             }
             return render(request, "./timeline.html", params)
         else:
             params = {
                 'name': user.name,
                 'mail': user.mail,
-                'photo': '/media/avtar.png'
+                'photo': '/media/avtar.png',
+                'id': user.hashid,
             }
             return render(request, "./timeline.html", params)
     except Exception as e:
@@ -95,8 +102,8 @@ def login(request):
         return redirect('/')
     if user.passwd == passwd:
         request.session['id'] = user.hashid
-        updateStatus = Users.objects.update(status=1)
-        # updateStatus.save()
+        user.status = 1
+        user.save()
         return redirect("/timeline/") 
     else:
         request.session['error'] = 'error'
@@ -114,6 +121,11 @@ def error(request, *args, **kwargs):
     return render(request, "error.html")
 
 def logout(request):
+    id = request.session['id']
+    user = Users.objects.get(hashid=id)
+    user.status = 0
+    user.save()
+    Users.objects.update(status=0)
     del request.session['id']
     return redirect('/')
 
@@ -141,13 +153,109 @@ def searchUser(request):
         for index, email in enumerate(tempdata):
             formDB = Users.objects.get(mail=email)
             if (formDB.photo != ""):
-                photo = f"/media/{formDB.photo}"
+                photo = f"../static/media/{formDB.photo}"
             else:
-                photo = "/media/avtar.png"
-            userList.append([formDB.name, formDB.mail, photo, formDB.hashid])
+                photo = "../static/media/avtar.png"
+            userList.append([formDB.name, formDB.mail, photo, formDB.hashid, formDB.status, formDB.number])
         return HttpResponse(userList)
     except:
         return HttpResponse("No data available")
     
+    
+def getUser(request):
+    reciever = request.GET.get("me")
+    # try:
+    user = Message.objects.get(reciever=reciever)
+    # tempdata = []
+    # userList = []
+    # for i in user:
+    #     if i != username:
+    #         if i not in tempdata:
+    #             tempdata.append(i)
+    # for i in userName:
+    #     if i != username:
+    #         if i not in tempdata:
+    #             tempdata.append(i)
+    # for index, email in enumerate(tempdata):
+    #     formDB = Users.objects.get(mail=email)
+    #     if (formDB.photo != ""):
+    #         photo = f"/media/{formDB.photo}"
+    #     else:
+    #         photo = "/media/avtar.png"
+    #     userList.append([formDB.name, formDB.mail, photo, formDB.hashid, formDB.status, formDB.number])
+    return HttpResponse(user)    
+    # except:
+    #     return HttpResponse("")
+    
 def story(request):
     return HttpResponse("")
+
+
+def matchnumber(request):
+    num = request.GET.get("num")
+    mail = request.GET.get("mail")
+    try:
+        from_db = Users.objects.get(number=num)
+        if (from_db.number == num and from_db.mail == mail):
+            otp = ""
+            for i in range(7):
+                otp = otp + str(random.randrange(9))
+            msg = f"Chat Seguro:\nOTP for password reset : {otp}. Do't share with anyone."
+            url = f"https://www.fast2sms.com/dev/bulkV2?authorization=2Gj5CQ7ZplKO6dBPLr3Xu8qVtIaesvJoTfHzRcDb0MknhUYFASWixSuo9czmYydTjUD2VXRsHwMlhQGv&route=v3&sender_id=TXTIND&message={msg}&language=english&flash=0&numbers={num}"
+            otp_response = https.get(url)
+            # otp_response = "<Response [200]>"
+            # otp = "7212127"
+            if(str(otp_response) == "<Response [200]>"):
+                obj = [hashlib.md5(otp.encode()).hexdigest(),"\n", from_db.hashid]
+                return HttpResponse(obj)
+            else:
+                return HttpResponse("failed")
+        else:
+            return HttpResponse("not-match")
+    except:
+        return HttpResponse("not-match")
+    
+def resetpass(request):
+    hashid = request.GET.get("hashid")
+    return render(request, "resetpass.html", {"hashid": hashid})
+
+def savepass(request):
+    hashid = request.GET.get("hashid")
+    passwd = request.GET.get("passwd")
+    passwd = hashlib.md5(passwd.encode())
+    passwd = passwd.hexdigest()
+    user = Users.objects.get(hashid=hashid)
+    user.passwd = passwd
+    user.save()
+    return HttpResponse("Done")
+
+def sendStatus(request):
+    id = request.GET.get('q')
+    user = Users.objects.get(hashid=id)
+    return HttpResponse(user.status)
+
+
+def saveMessage(request):
+    Time = datetime.now()
+    msg = request.GET.get("msg")
+    sender = request.GET.get("me")
+    reciever = request.GET.get("you")
+    time = request.GET.get("time")
+    temp_msg = Message.objects.create(message=msg, sender=sender, reciever=reciever, time=time, date=Time.strftime("%Y-%m-%d"))
+    check = temp_msg.save()
+    if check != None:
+        return HttpResponse("Send")
+    else:
+        return HttpResponse("fail")
+
+
+def getMessage(request):
+    reciever = request.GET.get("me")
+    sender = request.GET.get("you")
+    try:
+        msg = Message.objects.get(reciever=reciever, sender=sender)
+        return HttpResponse(msg)
+    except:
+        return HttpResponse("")
+    
+    

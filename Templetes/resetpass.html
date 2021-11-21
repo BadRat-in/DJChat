@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block title %}Forgot Password{% endblock title %} {% block content %}
+<center>
+    <div class="load" id="loader">
+        <div><img src="../../static/Image/loading1.gif" alt="Loading GIF"></div>
+    </div>
+    <h4 id="error-div" class="res-text"></h4>
+    <input type="hidden" value="{{hashid}}" id="hashid">
+    <div class="form">
+        <table>
+            <th colspan="2">Reset Password</th>
+            <tr>
+                <td><label for="pass">Password</label></td>
+                <td><input type="password" name="pass" class="input_field" placeholder="Password" required value="" id="pass"></td>
+            </tr>
+            <tr>
+                <td><label for="conform">Conform</label></td>
+                <td><input type="password" name="conform" class="input_field" placeholder="Conform" id="conform" required value="" onkeyup="matchpass()"></td>
+            </tr>
+        </table>
+        <input type="submit" value="Save" class="sub-btn" onclick="savepass()" id="sub-btn">
+
+    </div>
+</center>
+{% endblock content %} {% block script %}
+<script type="text/javascript" src="../../static/js/forgotpass.js"></script>
+{% endblock script %}

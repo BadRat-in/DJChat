@@ -1,50 +1,34 @@
-{% extends "base.html" %}
-{% block title %} Chat Seguro {% endblock title %}
-{% block content %}
-    <center>
+{% extends "base.html" %} {% block title %} Chat Seguro {% endblock title %} {% block content %}
+<center>
     {% if error == 'error' %}
-    <div><h4 style="color: #ee3333;">Username or Password is not correct</h4></div>
+    <div>
+        <h4 style="color: #ee3333;">Username or Password is not correct</h4>
+    </div>
+    {% endif %} {% if error2 == 'error2' %}
+    <div>
+        <h4 style="color: #ee3333;">An error has occurred</h4>
+    </div>
     {% endif %}
-    {% if error2 == 'error2' %}
-    <div><h4 style="color: #ee3333;">An error has occurred</h4></div>
-    {% endif %}
-        <div class="form">
-            <form method="POST" action="/login/">{% csrf_token %}
-                <table>
-                    <th colspan="2">Sign In</th>
-                    <tr>
-                        <td><label for="email">Email</label></td>
-                        <td><input type="email" name="email" class="input_field" placeholder="Email" required></td>
-                    </tr>
-                    <tr>
-                        <td><label for="passwd">Password</label></td>
-                        <td><input type="password" name="passwd" class="input_field" placeholder="Password" id="passwdfield" minlength="6" required><span><i class="far fa-eye passwd-icon" onclick="showpass('passwdfield', this.id)" id="eye-icon"></i></span></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="forgotpasswd"><a href="/forgotpasswd">Forgot Password</a></td>
-                    </tr>
-                </table>
-                <input type="submit" value="Sign In">
-            </form>
-        </div>
-    </center>
-{% endblock content %}
-{% block script %}
-<script type="text/javascript">
-    function showpass(id0, id1) {
-        const passwd = document.querySelector("#" + id0);
-        const passwd_icon = document.querySelector("#" + id1);
-        if (passwd.getAttribute("type") === "text") {
-            passwd.setAttribute("type", "password");
-            passwd_icon.className = "far fa-eye passwd-icon";
-            passwd_icon.style = "left: -26px; font-size: 18px;";
-
-        } else {
-            passwd.setAttribute("type", "text");
-            passwd_icon.className = "far fa-eye-slash passwd-icon";
-            passwd_icon.style = "left: -27px;"
-
-        }
-    }
-</script>
+    <div class="form">
+        <form method="POST" action="/login/">{% csrf_token %}
+            <table>
+                <th colspan="2">Sign In</th>
+                <tr>
+                    <td><label for="email">Email</label></td>
+                    <td><input type="email" name="email" class="input_field" placeholder="Email" required></td>
+                </tr>
+                <tr>
+                    <td><label for="passwd">Password</label></td>
+                    <td><input type="password" name="passwd" class="input_field" placeholder="Password" id="passwdfield" minlength="6" required><span><i class="far fa-eye passwd-icon" onclick="showpass('passwdfield', this.id)" id="eye-icon"></i></span></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="forgotpasswd"><a href="/forgotpasswd">Forgot Password</a></td>
+                </tr>
+            </table>
+            <input type="submit" value="Sign In">
+        </form>
+    </div>
+</center>
+{% endblock content %} {% block script %}
+<script type="text/javascript" src="../static/js/eye-btn.js"></script>
 {% endblock script %}
