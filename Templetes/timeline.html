@@ -10,12 +10,16 @@
     <link rel="stylesheet" href="{% static './CSS/timeline.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static './CSS/show-d.css' %}" type="text/css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
     <title>{{name}}</title>
     <link rel="shortcut icon" href="{{media}}{{photo}}" type="image/x-icon">
 </head>
 
 <body onload="setUserId(), getUser()">
+    <input type="hidden" name="favicon" value="{{media}}{{photo}}" id="fav">
+    <input type="hidden" name="mail" value="{{mail}}" id="mail">
     <input type="hidden" name="sender_id" value="{{id}}" id="sender-id">
     <div class="nav-bar">
         <img src="{% static 'Image/logo1.png' %}" alt="Logo">
@@ -61,7 +65,7 @@
             <div class="right-top">
                 <div class="user-details">
                     <input type="hidden" name="usernumber" value="" id="s-u-num">
-                    <img class="active-avtar-img" src="../static/media/avtar.png" alt="User Avtar" id="s-u-i">
+                    <img class="active-avtar-img" src="../media/avtar.png" alt="User Avtar" id="s-u-i">
                     <div style="margin-top: 10px;">
                         <h2 class="active-user" id="s-u-n">Username</h2>
                         <p class="user-status" id="s-u-s">Status</p>
@@ -94,8 +98,8 @@
             </div>
             <div class="right-btm">
                 <div class="form">
-                    <div onclick="openClip()" class="attenment" id="attenment">
-                        <i class="fas fa-plus icon-plus" id="plus-icon"></i>
+                    <div class="attenment" id="attenment">
+                        <i class="fas fa-plus icon-plus" id="plus-icon" onclick="openClip()"></i>
                         <i class="fas fa-image"></i>
                         <i class="fas fa-file"></i>
                         <i class="fas fa-camera"></i>
@@ -108,5 +112,6 @@
     </div>
 </body>
 <script type="text/javascript" src="{% static './js/timeline.js' %}"></script>
+<script type="text/javascript" src="{% static './js/sleep.js' %}"></script>
 
 </html>
