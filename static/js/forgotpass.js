@@ -13,7 +13,7 @@ function matchnum(str) {
                 response = response.split("\n");
                 console.log(typeof response)
                 if ((typeof response).toString() === "object") {
-                    document.getElementById("error-div").innerHTML = "OPT send.";
+                    document.getElementById("error-div").innerHTML = "OTP send.";
                     var otp = document.createElement("input");
                     var hashid = document.createElement("input");
                     otp.type = "hidden";
@@ -41,7 +41,7 @@ function matchnum(str) {
                     document.getElementById("error-div").style = "display: block; color: #ee3333;";
                     document.getElementById("loader").style = "display: none;";
                 } else {
-                    document.getElementById("error-div").innerHTML = "OPT not send.";
+                    document.getElementById("error-div").innerHTML = "OTP not send.";
                     document.getElementById("error-div").style = "display: block; color: #ee3333;";
                     document.getElementById("loader").style = "display: none;";
                 }
