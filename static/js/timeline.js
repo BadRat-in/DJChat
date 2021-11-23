@@ -15,10 +15,6 @@ input.addEventListener("keyup", function(event) {
 });
 
 
-window.addEventListener("beforeunload", function(event) {
-    event.preventDefault();
-    window.location.assign("/timeline/logout/");
-});
 
 function getUser() {
     var xmlhttp = new XMLHttpRequest();
@@ -77,7 +73,7 @@ function sendmsg() {
             var p = document.createElement("p");
             p.innerText = msg.value;
             d.append(p);
-            msg_box.innerHTML += "<div class='my-msg'><div class='my'>" + d.innerHTML + "<div class='msg-time'><p>" + msg_time + "</p></div></div><img src='../static/Image/user.jpg' alt='User Avtar'>";
+            msg_box.innerHTML += "<div class='my-msg'><div class='my'>" + d.innerHTML + "<div class='msg-time'><p>" + msg_time + "</p></div></div><img src='" + me_photo + "' alt='User Avtar'>";
             msg.value = "";
             const scrollHeight = msg_box.scrollHeight;
             msg_box.scrollTo({
@@ -144,6 +140,7 @@ function getMessage() {
     xmlhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             var msg = this.responseText;
+            msg_box.innerHTML = "";
             showmsg(msg);
             cmsg();
         }
@@ -177,7 +174,7 @@ function getStatus(str) {
     setInterval(() => {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
+            if (this.readyState === 4 && this.status === 200) {
                 var nStatus = this.responseText;
                 if (nStatus == 0) {
                     document.getElementById("s-u-s").style.color = "#aa5555";
