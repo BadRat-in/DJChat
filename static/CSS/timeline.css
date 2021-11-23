@@ -340,6 +340,7 @@ li {
     z-index: 999;
     display: flex;
     overflow: hidden;
+    margin-top: 5px;
     margin-left: 6px;
     height: 45px;
     width: 30px;
@@ -350,6 +351,13 @@ li {
     font-size: 22px;
     padding: 8px;
     cursor: pointer;
+}
+
+.attenment i:nth-child(3) {
+    transform: rotate(-90deg);
+    position: relative;
+    top: -2px;
+    margin-left: 7px;
 }
 
 @keyframes rotate45 {
