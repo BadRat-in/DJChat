@@ -1,6 +1,4 @@
-{% extends "base.html" %} 
-{% block title %}Chat Seguro - Contect{% endblock title %} 
-{% block content %}
+{% extends "base.html" %} {% block title %}Chat Seguro - Contect{% endblock title %} {% block content %}
 <center>
     {% comment %} {% if error == 'error' %}
     <div>
@@ -10,7 +8,7 @@
     <div class="form">
         <form method="POST" action="/get_support/">{% csrf_token %}
             <table>
-                <th colspan="2">Contect</th>
+                <th colspan="2">Contact</th>
                 <tr>
                     <td><label for="name">Name</label></td>
                     <td><input type="text" name="name" class="input_field" placeholder="Name" minlength="6" required></td>
