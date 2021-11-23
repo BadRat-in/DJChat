@@ -1,6 +1,8 @@
 var you = "";
+var me_photo = document.getElementById('fav').value;
 var me = "";
 var mail = "";
+var my_mail = document.getElementById('mail').value;
 var you_num = "";
 var msg_box = document.getElementById('msg-box');
 
@@ -14,7 +16,6 @@ input.addEventListener("keyup", function(event) {
 
 
 window.addEventListener("beforeunload", function(event) {
-    event.closeDWin
     event.preventDefault();
     window.location.assign("/timeline/logout/");
 });
@@ -23,8 +24,12 @@ function getUser() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            var data = this.responseText;
-            console.log(data);
+            var data = []
+            var data1 = this.responseText;
+            data = data1.split("[");
+            if ((typeof data).toString() === "object") {
+                createTile(data);
+            };
         }
     }
     xmlhttp.open("GET", "/timeline/getuser/?me=" + me, true);
@@ -33,7 +38,7 @@ function getUser() {
 
 function sendmsg() {
     var msg = document.getElementById('msg-input');
-    if (msg.value !== "" && msg.value.length < 100) {
+    if (msg.value.length > 0 && msg.value.length < 9990) {
         if (you === "" || you === null || me === "" || me === null) {
             var name = document.getElementById("name").innerText;
             alert("Hey, " + name + "\n\tPlease select a friend to chat. Thankyou")
@@ -58,19 +63,14 @@ function sendmsg() {
             } else {
                 var msg_time = hour + ":" + min + " PM";
             }
-            if (msg.length !== "") {
+            if (msg.value.length > 0) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
                         var data = this.responseText;
-                        if (data == "Send") {
-                            time += " " + data;
-                        } else {
-                            time += " Fail";
-                        }
                     }
                 }
-                xmlhttp.open("GET", "/timeline/savemessage/?msg" + msg.value + "&you=" + you + "&me=" + me + "&time=" + msg_time, true);
+                xmlhttp.open("GET", "/timeline/savemessage/?msg=" + msg.value + "&you=" + you + "&me=" + me + "&time=" + msg_time, true);
                 xmlhttp.send();
             }
             var d = document.createElement("div");
@@ -92,6 +92,9 @@ var height = 0
 msg_box.addEventListener("scroll", (e) => {
     if (height > msg_box.scrollTop) {
         document.getElementById("bottom-btn").style = "display: flex;";
+    }
+    if (height === msg_box.scrollHeight) {
+        document.getElementById("bottom-btn").style = "display: none;";
     }
     height = msg_box.scrollTop;
 });
@@ -132,17 +135,28 @@ function SendtoChat(str) {
     }
     document.getElementById("s-u-s").innerHTML = uStatus;
     document.getElementById("s-u-num").value = you_num;
+    getMessage();
 }
 
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+function getMessage() {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState === 4 && this.status === 200) {
+            var msg = this.responseText;
+            showmsg(msg);
+            cmsg();
+        }
+    };
+    xmlhttp.open('GET', '/timeline/getmessage/?me=' + me + '&you=' + you);
+    xmlhttp.send();
 }
+
 
 async function closeDWin() {
     var ele = document.getElementById("container");
-    document.getElementById("show-d").style = "animation: none; animation: zoom-out-win 350ms ease, reverse-win 350ms ease;";
-    await sleep(350);
+    document.getElementById("show-d").style = "animation: none; animation: zoom-out-win 450ms ease, reverse-win 350ms ease;";
+    await sleep(440);
     ele.style = "display: none;";
 }
 
@@ -155,7 +169,7 @@ function showDetails() {
     document.getElementById("s-detail-u-i").setAttribute("src", image);
     document.getElementById("s-detail-u-num").innerHTML = you_num;
     ele.style = "display: flex;";
-    document.getElementById("show-d").style = "animation: changeplace 350ms ease, scale 350ms ease;";
+    document.getElementById("show-d").style = "animation: changeplace 450ms ease, scale 350ms ease;";
 
 }
 
@@ -177,7 +191,7 @@ function getStatus(str) {
         };
         xmlhttp.open("GET", "/timeline/getstatus/?q=" + str, true);
         xmlhttp.send();
-    }, 250);
+    }, 800);
 }
 
 
@@ -206,59 +220,112 @@ function searchUser(str) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
+                var data = []
                 var data1 = this.responseText;
                 data = data1.split("[");
                 if ((data1) == "No data available") {
                     document.getElementById("userlist").innerHTML = "<h4>" + data + "</h4>";
                 } else {
-                    var temp_array = []
-                    data.forEach((value, index, array) => {
-                        var temp = value.split(", ");
-                        temp_array.push(temp)
-                    });
-                    temp_array.splice(0, 1)
-                    var html_data = ""
-                    temp_array.forEach((value, index, array) => {
-                        var nametemp = value[0].split("");
-                        var mailtemp = value[1].split("");
-                        let counter;
-                        if (value[0].length < 20) {
-                            counter = value[0].length - 1;
-                        } else {
-                            counter = 20;
-                        }
-                        for (var i = 0; i < counter; i++) {
-                            if (i === 1) {
-                                value[0] = nametemp[i]
-                            } else {
-                                value[0] += nametemp[i]
-                            }
-                        }
-                        if (value[1].length < 25) {
-                            counter = value[1].length - 1;
-                        } else {
-                            counter = 25;
-                        }
-                        for (var i = 0; i < counter; i++) {
-                            if (i === 1) {
-                                value[1] = mailtemp[i]
-                            } else {
-                                value[1] += mailtemp[i]
-                            }
-                        }
-                        if (value[0].length === 19) {
-                            value[0] += "...";
-                        }
-                        if (value[1].length === 24) {
-                            value[1] += "...";
-                        }
-                        html_data += "<li onclick='SendtoChat(this.id), getStatus(this.id)' id='" + value[3].slice(1, -1) + "'><div class='user-tile'><div class='user-details-tile'><img class='avtar-img' src=" + value[2] + " alt='User Avtar' id='img-" + value[3].slice(1, -1) + "'><div><input type='hidden' name='userid' value='" + value[3].slice(1, -1) + "'/><input type='hidden' name='userStatus' value='" + value[4].slice(0, 1) + "' id='status-" + value[3].slice(1, -1) + "'/><input type='hidden' name='userNumber' value='" + value[5].slice(1, -1) + "' id='number-" + value[3].slice(1, -1) + "'/><h3 id='name-" + value[3].slice(1, -1) + "'>" + value[0] + "</h3><p id='mail-" + value[3].slice(1, -1) + "'>" + value[1] + "</p></div></div></div></li>";
-                    });
-                    document.getElementById("userlist").innerHTML = html_data;
+                    createTile(data);
                 }
             }
         };
-        xmlhttp.open("GET", "/timeline/searchUser/?q=" + str + "&user={{mail}}", true);
+        xmlhttp.open("GET", "/timeline/searchUser/?q=" + str + "&user=" + my_mail, true);
         xmlhttp.send();
     }
+}
+
+function createTile(data) {
+    var temp_array = []
+    data.forEach((value, index, array) => {
+        var temp = value.split(", ");
+        temp_array.push(temp)
+    });
+    temp_array.splice(0, 1)
+    var html_data = ""
+    temp_array.forEach((value, index, array) => {
+        var nametemp = value[0].split("");
+        var mailtemp = value[1].split("");
+        let counter;
+        if (value[0].length < 20) {
+            counter = value[0].length - 1;
+        } else {
+            counter = 20;
+        }
+        for (var i = 0; i < counter; i++) {
+            if (i === 1) {
+                value[0] = nametemp[i]
+            } else {
+                value[0] += nametemp[i]
+            }
+        }
+        if (value[1].length < 25) {
+            counter = value[1].length - 1;
+        } else {
+            counter = 25;
+        }
+        for (var i = 0; i < counter; i++) {
+            if (i === 1) {
+                value[1] = mailtemp[i]
+            } else {
+                value[1] += mailtemp[i]
+            }
+        }
+        if (value[0].length === 19) {
+            value[0] += "...";
+        }
+        if (value[1].length === 24) {
+            value[1] += "...";
+        }
+        html_data += "<li onclick='SendtoChat(this.id), getStatus(this.id)' id='" + value[3].slice(1, -1) + "'><div class='user-tile'><div class='user-details-tile'><img class='avtar-img' src=" + value[2] + " alt='User Avtar' id='img-" + value[3].slice(1, -1) + "'><div><input type='hidden' name='userid' value='" + value[3].slice(1, -1) + "'/><input type='hidden' name='userStatus' value='" + value[4].slice(0, 1) + "' id='status-" + value[3].slice(1, -1) + "'/><input type='hidden' name='userNumber' value='" + value[5].slice(1, -1) + "' id='number-" + value[3].slice(1, -1) + "'/><h3 id='name-" + value[3].slice(1, -1) + "'>" + value[0] + "</h3><p id='mail-" + value[3].slice(1, -1) + "'>" + value[1] + "</p></div></div></div></li>";
+    });
+    document.getElementById("userlist").innerHTML = html_data;
+}
+
+function showmsg(data) {
+    var image = document.getElementById('s-u-i').getAttribute("src");
+    data = data.split("][");
+    if (data[0].length > 30) {
+        data.forEach((index, array) => {
+            index = index.split("', '");
+            if (index[2] == me) {
+                msg_box.innerHTML += "<div class='my-msg'><div class='my'><p>" + index[1] + "</p><div class='msg-time'><p>" + index[3] + "</p></div></div><img src='" + me_photo + "' alt='User Avtar'>";
+            } else {
+                msg_box.innerHTML += "<div class='your-msg'><img src='" + image + "' alt='User Avtar'><div class='your'><p>" + index[1] + "</p><div class='msg-time'><p>" + index[3] + "</p></div></div>";
+            }
+        });
+        const scrollHeight = msg_box.scrollHeight;
+        msg_box.scrollTo({
+            top: scrollHeight,
+            behavior: "auto",
+        });
+    }
+}
+
+function cmsg() {
+    var image = document.getElementById('s-u-i').getAttribute("src");
+    setInterval(() => {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                var data = this.responseText;
+                var dataarr = data.split("][");
+                if (dataarr[0].length > 30) {
+                    dataarr.forEach((index) => {
+                        index = index.split("', '");
+                        if (index[2] != me) {
+                            msg_box.innerHTML += "<div class='your-msg'><img src='" + image + "' alt='User Avtar'><div class='your'><p>" + index[1] + "</p><div class='msg-time'><p>" + index[3] + "</p></div></div>";
+                        }
+                    });
+                    const scrollHeight = msg_box.scrollHeight;
+                    msg_box.scrollTo({
+                        top: scrollHeight,
+                        behavior: "auto",
+                    });
+                }
+            }
+        };
+        xmlhttp.open('GET', '/timeline/cmsg/?me=' + me + '&you=' + you);
+        xmlhttp.send();
+    }, 500);
 }
