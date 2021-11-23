@@ -5,6 +5,7 @@ from .models import Users, Message
 import hashlib
 import json, requests as https, random
 from datetime import datetime
+from django.db.models import Q
 
 # Create your views here.
 def home(request) :
@@ -55,7 +56,6 @@ def timeline(request):
             }
             return render(request, "./timeline.html", params)
     except Exception as e:
-        print(e)
         request.session['error2'] = 'error2'
         return redirect('/')
 
@@ -150,12 +150,16 @@ def searchUser(request):
             if i != username:
                 if i not in tempdata:
                     tempdata.append(i)
-        for index, email in enumerate(tempdata):
+        usertemp = []
+        for i in tempdata:
+            if str(i) != username:
+                usertemp.append(i)
+        for index, email in enumerate(usertemp):
             formDB = Users.objects.get(mail=email)
             if (formDB.photo != ""):
-                photo = f"../static/media/{formDB.photo}"
+                photo = f"../media/{formDB.photo}"
             else:
-                photo = "../static/media/avtar.png"
+                photo = "../media/avtar.png"
             userList.append([formDB.name, formDB.mail, photo, formDB.hashid, formDB.status, formDB.number])
         return HttpResponse(userList)
     except:
@@ -164,28 +168,41 @@ def searchUser(request):
     
 def getUser(request):
     reciever = request.GET.get("me")
-    # try:
-    user = Message.objects.get(reciever=reciever)
-    # tempdata = []
-    # userList = []
-    # for i in user:
-    #     if i != username:
-    #         if i not in tempdata:
-    #             tempdata.append(i)
-    # for i in userName:
-    #     if i != username:
-    #         if i not in tempdata:
-    #             tempdata.append(i)
-    # for index, email in enumerate(tempdata):
-    #     formDB = Users.objects.get(mail=email)
-    #     if (formDB.photo != ""):
-    #         photo = f"/media/{formDB.photo}"
-    #     else:
-    #         photo = "/media/avtar.png"
-    #     userList.append([formDB.name, formDB.mail, photo, formDB.hashid, formDB.status, formDB.number])
-    return HttpResponse(user)    
-    # except:
-    #     return HttpResponse("")
+    try:
+        msg = Message.objects.filter(reciever=reciever)
+        hashtemp = []
+        userhashtemp = []
+        userList = []
+        for i in msg:
+            hashtemp.append(i)
+        hashtemp = list(dict.fromkeys(hashtemp))
+        for hashid in hashtemp:
+            user = Message.objects.get(hashid=hashid)
+            userhashtemp.append(user.sender)
+        userhashtemp = list(dict.fromkeys(userhashtemp))
+        msg = Message.objects.filter(sender=reciever)
+        for i in msg:
+            hashtemp.append(i)
+        hashtemp = list(dict.fromkeys(hashtemp))
+        for hashid in hashtemp:
+            user = Message.objects.get(hashid=hashid)
+            userhashtemp.append(user.reciever)
+        userhashtemp = list(dict.fromkeys(userhashtemp))
+        userhashtemp2 = []
+        for i in userhashtemp:
+            if i != reciever:
+                userhashtemp2.append(i)
+        for hashid in userhashtemp2:
+            formDB = Users.objects.get(hashid=hashid)
+            if (formDB.photo != ""):
+                photo = f"../media/{formDB.photo}"
+            else:
+                photo = "../media/avtar.png"
+            userList.append([formDB.name, formDB.mail, photo, formDB.hashid, formDB.status, formDB.number])
+            
+        return HttpResponse(userList)    
+    except:
+        return HttpResponse("")
     
 def story(request):
     return HttpResponse("")
@@ -203,8 +220,6 @@ def matchnumber(request):
             msg = f"Chat Seguro:\nOTP for password reset : {otp}. Do't share with anyone."
             url = f"https://www.fast2sms.com/dev/bulkV2?authorization=2Gj5CQ7ZplKO6dBPLr3Xu8qVtIaesvJoTfHzRcDb0MknhUYFASWixSuo9czmYydTjUD2VXRsHwMlhQGv&route=v3&sender_id=TXTIND&message={msg}&language=english&flash=0&numbers={num}"
             otp_response = https.get(url)
-            # otp_response = "<Response [200]>"
-            # otp = "7212127"
             if(str(otp_response) == "<Response [200]>"):
                 obj = [hashlib.md5(otp.encode()).hexdigest(),"\n", from_db.hashid]
                 return HttpResponse(obj)
@@ -237,11 +252,16 @@ def sendStatus(request):
 
 def saveMessage(request):
     Time = datetime.now()
+    ms = ""
+    for i in range(10):
+        ms = ms + str(random.randrange(9))
+    temp = Time.strftime("%Y%m%d%H%M%S")
+    temp = temp + ms
     msg = request.GET.get("msg")
     sender = request.GET.get("me")
     reciever = request.GET.get("you")
     time = request.GET.get("time")
-    temp_msg = Message.objects.create(message=msg, sender=sender, reciever=reciever, time=time, date=Time.strftime("%Y-%m-%d"))
+    temp_msg = Message.objects.create(message=msg, sender=sender, reciever=reciever, time=time, date=Time.strftime("%Y-%m-%d"), hashid=hashlib.md5(temp.encode()).hexdigest())
     check = temp_msg.save()
     if check != None:
         return HttpResponse("Send")
@@ -253,8 +273,30 @@ def getMessage(request):
     reciever = request.GET.get("me")
     sender = request.GET.get("you")
     try:
-        msg = Message.objects.get(reciever=reciever, sender=sender)
-        return HttpResponse(msg)
+        hashtemp = Message.objects.filter(Q(reciever=reciever) | Q(reciever=sender), Q(sender=sender) | Q(sender=reciever))
+        msgtemp = []
+        for i in hashtemp:
+                msg = Message.objects.get(hashid=i)
+                msg.isDeliver = 1
+                msg.save()
+                msgtemp.append([msg.hashid, msg.message, msg.sender, str(msg.time), str(msg.date)])
+        return HttpResponse(msgtemp)
+    except:
+        return HttpResponse("")
+    
+def cmsg(request):
+    reciever = request.GET.get("me")
+    sender = request.GET.get("you")
+    try:
+        hashtemp = Message.objects.filter(reciever=reciever, sender=sender)
+        msgtemp = []
+        for i in hashtemp:
+                msg = Message.objects.get(hashid=i)
+                if msg.isDeliver != 1:
+                    msg.isDeliver = 1
+                    msg.save()
+                    msgtemp.append([msg.hashid, msg.message, msg.sender, str(msg.time), str(msg.date)])
+        return HttpResponse(msgtemp)
     except:
         return HttpResponse("")
     
